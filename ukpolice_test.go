@@ -35,15 +35,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
 	"os"
 	"reflect"
-	"strings"
 	"testing"
-	"time"
 )
 
 const (
@@ -125,25 +122,6 @@ func TestDo_requestError(t *testing.T) {
 	}
 }
 
-func TestDo_httpError(t *testing.T) {
-	client, mux, _, teardown := setup()
-	defer teardown()
-
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		http.Error(w, "Bad Request", 400)
-	})
-
-	req, _ := client.NewRequest("GET", ".", nil)
-	resp, err := client.Do(context.Background(), req, nil)
-
-	if err == nil {
-		t.Fatal("Expected HTTP 400 error, got no error.")
-	}
-	if resp.StatusCode != 400 {
-		t.Errorf("Expected HTTP 400 error, got %d status code.", resp.StatusCode)
-	}
-}
-
 func TestDo_jsonSyntaxError(t *testing.T) {
 	client, mux, _, teardown := setup()
 	defer teardown()
@@ -199,92 +177,5 @@ func TestDo_ioWriter(t *testing.T) {
 
 	if w.String() != "some data" {
 		t.Fatalf("expected \"some data\"; got %q", w.String())
-	}
-}
-
-func TestDo_warningHeadersAreLogged(t *testing.T) {
-	client, mux, _, teardown := setup()
-	defer teardown()
-
-	var out bytes.Buffer
-	log.SetOutput(&out)
-
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("warning", "299 - This route is deprecated.")
-	})
-
-	req, _ := client.NewRequest("GET", ".", nil)
-	client.Do(context.Background(), req, nil)
-
-	if !strings.Contains(out.String(), "deprecated") {
-		t.Fatalf("deprecation warning not logged; got %q", out.String())
-	}
-}
-
-func TestCustomLogger(t *testing.T) {
-	client, mux, _, teardown := setup()
-	defer teardown()
-
-	var out bytes.Buffer
-	client.Logging.Error = log.New(&out, "", 0)
-
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("warning", "299 - This route is deprecated.")
-	})
-
-	req, _ := client.NewRequest("GET", ".", nil)
-	client.Do(context.Background(), req, nil)
-
-	if !strings.Contains(out.String(), "deprecated") {
-		t.Fatalf("deprecation warning not logged; got %q", out.String())
-	}
-}
-
-func TestDo_errorRateLimit(t *testing.T) {
-	client, mux, _, teardown := setup()
-
-	staticNow := time.Date(2018, 1, 1, 18, 0, 0, 0, time.UTC)
-
-	oldtime := now
-	now = func() time.Time {
-		return staticNow
-	}
-
-	defer func() {
-		now = oldtime
-		teardown()
-	}()
-
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("x-esi-error-limit-remain", "60")
-		w.Header().Set("x-esi-error-limit-reset", "42")
-
-		http.Error(w, `{"error":"some error"}`, 400)
-	})
-
-	req, _ := client.NewRequest("GET", ".", nil)
-	_, err := client.Do(context.Background(), req, nil)
-	v, ok := err.(*Error)
-	if !ok {
-		t.Fatal("expected an error of type *ErrorResponse")
-	}
-
-	if v.Error() != "some error" {
-		t.Fatalf("expected error text \"some error\"; got %q", v.Err)
-	}
-
-	if !v.Rate.Reset.Equal(staticNow.Add(42 * time.Second)) {
-		t.Fatalf("expected reset to happen in 42s; got %v", v.Rate.Reset.Sub(staticNow))
-	}
-}
-
-func TestRate_string(t *testing.T) {
-	r := Rate{Remaining: 60, Reset: time.Now().Add(5 * time.Second)}
-
-	expected := "error rate limit: 60 remaining calls; reset in 5s"
-	got := r.String()
-
-	if got != expected {
-		t.Fatalf("unexpected output from Rate.String(); got %q; want %q", got, expected)
 	}
 }
