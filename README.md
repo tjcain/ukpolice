@@ -13,13 +13,13 @@ A work in porgress wrapper for the data.police.uk api
 
 ## Crime
 
-- [ ] Neighbourhoods
-- [ ] Specific neighbourhood
-- [ ] Neighbourhood boundary
-- [ ] Neighbourhood team
-- [ ] Neighbourhood events
-- [ ] Neighbourhood priorities
-- [ ] Locate neighbourhood
+- [ ] Street level crimes
+- [ ] Street level outcomes
+- [ ] Crimes at location
+- [ ] Crimes with no location
+- [ ] Crime categories
+- [ ] Last updated
+- [ ] Outcomes for a specific crime
 
 ## Neighbourhood related
 
