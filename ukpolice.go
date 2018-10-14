@@ -40,6 +40,7 @@ type Client struct {
 	// Services used for talking to different parts of the data.police.uk API
 	Avaliability *AvaliabilityService
 	Force        *ForceService
+	Crime        *CrimeService
 	// @TODO: Crime Related
 	// @TODO: Neighborhood Related
 	// @TODO: Stop and Search Related
@@ -67,6 +68,7 @@ func NewClient(httpClient *http.Client) *Client {
 	// endpoints
 	api.Avaliability = (*AvaliabilityService)(&api.common)
 	api.Force = (*ForceService)(&api.common)
+	api.Crime = (*CrimeService)(&api.common)
 
 	return api
 }
@@ -79,7 +81,6 @@ func (api *Client) NewRequest(method, url string, body interface{}) (*http.Reque
 	if err != nil {
 		return nil, err
 	}
-
 	req, err := http.NewRequest(method, u.String(), nil)
 	if err != nil {
 		return nil, err
@@ -91,7 +92,6 @@ func (api *Client) NewRequest(method, url string, body interface{}) (*http.Reque
 	if api.UserAgent != "" {
 		req.Header.Set("User-Agent", api.UserAgent)
 	}
-
 	return req, nil
 }
 
@@ -144,6 +144,12 @@ func (api *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*R
 	}
 
 	return response, nil
+}
+
+// Date represents specified optional date parameters to various methods that
+// support date queries.
+type Date struct {
+	Date string `json:"date,omitempty" url:"date"`
 }
 
 // Bool is a helper function that allocates a new bool value

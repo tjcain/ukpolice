@@ -1,6 +1,6 @@
-# Police UK API https://data.police.uk
+# Police UK API
 
-A work in porgress wrapper for the data.police.uk api
+A work in progress wrapper for the data.police.uk api
 
 - [ ] Authentication // _not needed_
 - [ ] Rate limit // _need tests to check rate limit does not exceed 15 requests per second_
@@ -13,7 +13,7 @@ A work in porgress wrapper for the data.police.uk api
 
 ## Crime
 
-- [ ] Street level crimes
+- [x] Street level crimes
 - [ ] Street level outcomes
 - [ ] Crimes at location
 - [ ] Crimes with no location
