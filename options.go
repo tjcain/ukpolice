@@ -6,15 +6,13 @@ import (
 
 // Option specifies parameters to various methods that support multiple variable
 // choices.
-type Option func(*url.URL)
+type Option func(*url.Values)
 
 // WithDate adds date information to methods which accept a date
 // parameter.
 func WithDate(date string) Option {
-	return func(u *url.URL) {
-		q := u.Query()
-		q.Set("date", string(date))
-		u.RawQuery = q.Encode()
+	return func(v *url.Values) {
+		v.Set("date", string(date))
 	}
 }
 
@@ -23,11 +21,12 @@ func WithDate(date string) Option {
 // Lat Long is exclusive and may not be combied with any other location variable
 // in a single request, doing so will result in a panic.
 func WithLatLong(latitude, longitude string) Option {
-	return func(u *url.URL) {
-		q := u.Query()
-		q.Set("lat", string(latitude))
-		q.Set("lng", longitude)
-		u.RawQuery = q.Encode()
+	return func(v *url.Values) {
+		if v.Get("poly") != "" || v.Get("location_id") != "" {
+			panic("oops")
+		}
+		v.Set("lat", string(latitude))
+		v.Set("lng", longitude)
 	}
 }
 
@@ -36,10 +35,11 @@ func WithLatLong(latitude, longitude string) Option {
 // WithPolygon is exclusive and may not be combied with any other location variable
 // in a single request, doing so will result in a panic.
 func WithPolygon(poly string) Option {
-	return func(u *url.URL) {
-		q := u.Query()
-		q.Set("poly", poly)
-		u.RawQuery = q.Encode()
+	return func(v *url.Values) {
+		if v.Get("lat") != "" || v.Get("lng") != "" || v.Get("location_id") != "" {
+			panic("oops")
+		}
+		v.Set("poly", poly)
 	}
 }
 
@@ -48,30 +48,20 @@ func WithPolygon(poly string) Option {
 // WithLocationID is exclusive and may not be combied with any other location variable
 // in a single request, doing so will result in a panic.
 func WithLocationID(id string) Option {
-	return func(u *url.URL) {
-		q := u.Query()
-		q.Set("location_id", string(id))
-		u.RawQuery = q.Encode()
-		// u.Path = u.Path + fmt.Sprintf("location_id=%d&", id)
+	return func(v *url.Values) {
+		if v.Get("lat") != "" || v.Get("lng") != "" || v.Get("poly") != "" {
+			panic("oops")
+		}
+		v.Set("location_id", id)
 	}
 }
 
 func addOptions(baseURL string, opts ...Option) string {
 	u, _ := url.Parse(baseURL)
-
-	for _, opt := range opts {
-		opt(u)
-	}
-
-	// check only one location method has been passed
 	q := u.Query()
-	d := q.Get("date")
-	if len(opts) > 2 {
-		panic("Usage: Must contain only one location method + optional date")
+	for _, opt := range opts {
+		opt(&q)
 	}
-	if len(opts) == 2 && d == "" {
-		panic("Usage: Must contain only one location method + optional date")
-	}
-
+	u.RawQuery = q.Encode()
 	return u.String()
 }
