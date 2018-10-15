@@ -2,17 +2,14 @@ package ukpolice
 
 import (
 	"context"
+	"fmt"
 )
 
-// @TODO: handle 503 error, which is returned when a request contains over 1000
-// results: If a custom area contains more than 10,000 crimes, the API will
-// return a 503 status code.
-
 // CrimeService handles communication with the crime related
-// method of the data.police.uk API
+// method of the data.police.uk API.
 type CrimeService service
 
-// Crime holds information about individual crimes recorded
+// Crime holds information about individual crimes recorded.
 type Crime struct {
 	Category        string            `json:"category,omitempty"`
 	LocationType    string            `json:"location_type,omitempty"`
@@ -27,10 +24,29 @@ type Crime struct {
 
 // Outcome holds information on the outcome of a crime at street-level.
 type Outcome struct {
-	Category map[string]string `json:"category,omitempty"`
-	Date     string            `json:"date,omitempty"`
-	PersonID uint              `json:"person_id,omitempty"`
-	Crime    Crime             `json:"crime,omitempty"`
+	Category OutcomeCategory `json:"category,omitempty"`
+	Date     string          `json:"date,omitempty"`
+	PersonID uint            `json:"person_id,omitempty"`
+	Crime    Crime           `json:"crime,omitempty"`
+}
+
+// OutcomeCategory holds category information relating to the outcome of a crime.
+type OutcomeCategory struct {
+	Code string `json:"code,omitempty"`
+	Name string `json:"name,omitempty"`
+}
+
+// CrimeCategory holds of valid categories.
+type CrimeCategory struct {
+	URL  string `json:"url,omitempty"`
+	Name string `json:"name,omitempty"`
+}
+
+// OutcomesForSpecificCrime holds information returned about the outcomes of a
+// specific crime.
+type OutcomesForSpecificCrime struct {
+	Crime    Crime     `json:"crime,omitempty"`
+	Outcomes []Outcome `json:"outcomes,omitempty"`
 }
 
 func (c Crime) String() string {
@@ -76,8 +92,101 @@ func (c *CrimeService) GetStreetLevelOutcomes(ctx context.Context, opts ...Optio
 	return outcomes, resp, nil
 }
 
-// Crimes at location
-// Crimes with no location
-// Crime categories
-// Last updated
-// Outcomes for a specific crime
+// GetCrimesAtLocation Returns just the crimes which occurred at the specified
+//location, rather than those within a radius. If given latitude and longitude,
+//finds the nearest pre-defined location and returns the crimes which occurred there.
+func (c *CrimeService) GetCrimesAtLocation(ctx context.Context, opts ...Option) ([]Crime, *Response, error) {
+	u := "crimes-at-location"
+	u = addOptions(u, opts...)
+
+	req, err := c.api.NewRequest("GET", u, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var crimes []Crime
+	resp, err := c.api.Do(ctx, req, &crimes)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return crimes, resp, nil
+}
+
+// GetCrimesWithNoLocation returns a list of crimes associated to a specified
+// police force that could not be mapped to a location. Force is mandatory.
+// if no catergory is provided all-crime will be used as default
+func (c *CrimeService) GetCrimesWithNoLocation(ctx context.Context, opts ...Option) ([]Crime, *Response, error) {
+	u := "crimes-no-location"
+	u = addOptions(u, opts...)
+
+	req, err := c.api.NewRequest("GET", u, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var crimes []Crime
+	resp, err := c.api.Do(ctx, req, &crimes)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return crimes, resp, nil
+}
+
+// GetCrimeCategories returns a list of valid crime categories for a given date.
+func (c *CrimeService) GetCrimeCategories(ctx context.Context, date Option) ([]CrimeCategory, *Response, error) {
+	u := "crime-categories"
+	u = addOptions(u, date)
+
+	req, err := c.api.NewRequest("GET", u, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var categories []CrimeCategory
+	resp, err := c.api.Do(ctx, req, &categories)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return categories, resp, nil
+}
+
+// GetLastUpdated returns the date when the API was last updated.
+func (c *CrimeService) GetLastUpdated(ctx context.Context) (*Date, *Response, error) {
+	u := "crime-last-updated"
+
+	req, err := c.api.NewRequest("GET", u, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var date *Date
+	resp, err := c.api.Do(ctx, req, &date)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return date, resp, nil
+
+}
+
+// GetSpecificOutcomes returns the crime details and outcome details for a specific crime
+func (c *CrimeService) GetSpecificOutcomes(ctx context.Context, persistentID string) (*OutcomesForSpecificCrime, *Response, error) {
+	u := fmt.Sprintf("outcomes-for-crime/%s", persistentID)
+
+	req, err := c.api.NewRequest("GET", u, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var crimeOutcomes *OutcomesForSpecificCrime
+	resp, err := c.api.Do(ctx, req, &crimeOutcomes)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return crimeOutcomes, resp, nil
+
+}

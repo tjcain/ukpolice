@@ -41,7 +41,6 @@ type Client struct {
 	Avaliability *AvaliabilityService
 	Force        *ForceService
 	Crime        *CrimeService
-	// @TODO: Crime Related
 	// @TODO: Neighborhood Related
 	// @TODO: Stop and Search Related
 
@@ -146,8 +145,7 @@ func (api *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*R
 	return response, nil
 }
 
-// Date represents specified optional date parameters to various methods that
-// support date queries.
+// Date represents a date in the format YYYY-MM
 type Date struct {
 	Date string `json:"date,omitempty" url:"date"`
 }

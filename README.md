@@ -2,24 +2,23 @@
 
 A work in progress wrapper for the data.police.uk api
 
-- [ ] Authentication // _not needed_
 - [ ] Rate limit // _need tests to check rate limit does not exceed 15 requests per second_
 
 ## Forces
 
-- [x] Forces _/forces_
-- [x] Specific force _/forces/:force_
-- [x] Force senior officers _/forces/:force/people_
+- [x] Forces
+- [x] Specific force
+- [x] Force senior officers 
 
 ## Crime
 
 - [x] Street level crimes
-- [ ] Street level outcomes
-- [ ] Crimes at location
-- [ ] Crimes with no location
-- [ ] Crime categories
-- [ ] Last updated
-- [ ] Outcomes for a specific crime
+- [x] Street level outcomes
+- [x] Crimes at location
+- [x] Crimes with no location
+- [x] Crime categories
+- [x] Last updated
+- [x] Outcomes for a specific crime
 
 ## Neighbourhood related
 
@@ -37,3 +36,8 @@ A work in progress wrapper for the data.police.uk api
 - [ ] Stop and searches by location
 - [ ] Stop and searches with no location
 - [ ] Stop and searches by force
+
+## Misc.to
+
+- [ ] @TODO: handle 503 error, which is returned when a request contains over 10000 results 
+

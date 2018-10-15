@@ -8,18 +8,14 @@ import (
 // choices.
 type Option func(*url.Values)
 
-// WithDate adds date information to methods which accept a date
-// parameter.
+// WithDate sets provided date URL parameters.
 func WithDate(date string) Option {
 	return func(v *url.Values) {
 		v.Set("date", string(date))
 	}
 }
 
-// WithLatLong will add provided latitude and longitude information to methods
-// which accept a latitude and longitude.
-// Lat Long is exclusive and may not be combied with any other location variable
-// in a single request, doing so will result in a panic.
+// WithLatLong sets provided latitude and longitude URL parameters.
 func WithLatLong(latitude, longitude string) Option {
 	return func(v *url.Values) {
 		if v.Get("poly") != "" || v.Get("location_id") != "" {
@@ -30,10 +26,7 @@ func WithLatLong(latitude, longitude string) Option {
 	}
 }
 
-// WithPolygon will add provided latitude and longitude information to methods
-// which accept a latitude and longitude.
-// WithPolygon is exclusive and may not be combied with any other location variable
-// in a single request, doing so will result in a panic.
+// WithPolygon sets provided polygon URL parameters.
 func WithPolygon(poly string) Option {
 	return func(v *url.Values) {
 		if v.Get("lat") != "" || v.Get("lng") != "" || v.Get("location_id") != "" {
@@ -43,16 +36,27 @@ func WithPolygon(poly string) Option {
 	}
 }
 
-// WithLocationID will add provided latitude and longitude information to methods
-// which accept a latitude and longitude.
-// WithLocationID is exclusive and may not be combied with any other location variable
-// in a single request, doing so will result in a panic.
+// WithLocationID sets provided locationID URL parameters.
 func WithLocationID(id string) Option {
 	return func(v *url.Values) {
 		if v.Get("lat") != "" || v.Get("lng") != "" || v.Get("poly") != "" {
 			panic("oops")
 		}
 		v.Set("location_id", id)
+	}
+}
+
+// WithCrimeCategory sets provided crime category URL parameters.
+func WithCrimeCategory(category string) Option {
+	return func(v *url.Values) {
+		v.Set("category", category)
+	}
+}
+
+// WithForce sets provided force URL parameters.
+func WithForce(force string) Option {
+	return func(v *url.Values) {
+		v.Set("force", force)
 	}
 }
 
