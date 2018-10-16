@@ -41,7 +41,7 @@ type Client struct {
 	Avaliability *AvaliabilityService
 	Force        *ForceService
 	Crime        *CrimeService
-	// @TODO: Neighborhood Related
+	Neighborhood *NeighbourhoodService
 	// @TODO: Stop and Search Related
 
 }
@@ -68,6 +68,7 @@ func NewClient(httpClient *http.Client) *Client {
 	api.Avaliability = (*AvaliabilityService)(&api.common)
 	api.Force = (*ForceService)(&api.common)
 	api.Crime = (*CrimeService)(&api.common)
+	api.Neighborhood = (*NeighbourhoodService)(&api.common)
 
 	return api
 }
