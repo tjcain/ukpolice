@@ -34,7 +34,7 @@ A work in progress wrapper for the data.police.uk api
 - [x] Stop and searches by area
 - [x] Stop and searches by location
 - [x] Stop and searches with no location
-- [ ] Stop and searches by force
+- [x] Stop and searches by force
 
 ## Misc. ToDo
 
