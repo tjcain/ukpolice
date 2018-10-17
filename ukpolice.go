@@ -38,12 +38,11 @@ type Client struct {
 	common service // Reuse a single struct instead of allocating one for each service.
 
 	// Services used for talking to different parts of the data.police.uk API
-	Avaliability *AvaliabilityService
-	Force        *ForceService
-	Crime        *CrimeService
-	Neighborhood *NeighbourhoodService
-	// @TODO: Stop and Search Related
-
+	Avaliability  *AvaliabilityService
+	Force         *ForceService
+	Crime         *CrimeService
+	Neighborhood  *NeighbourhoodService
+	StopAndSearch *StopAndSearchService
 }
 
 // NewClient returns a new data.police.uk API client. If a nil httpClient is
@@ -69,6 +68,7 @@ func NewClient(httpClient *http.Client) *Client {
 	api.Force = (*ForceService)(&api.common)
 	api.Crime = (*CrimeService)(&api.common)
 	api.Neighborhood = (*NeighbourhoodService)(&api.common)
+	api.StopAndSearch = (*StopAndSearchService)(&api.common)
 
 	return api
 }
