@@ -24,16 +24,13 @@ type Crime struct {
 
 // Outcome holds information on the outcome of a crime at street-level.
 type Outcome struct {
-	Category OutcomeCategory `json:"category,omitempty"`
-	Date     string          `json:"date,omitempty"`
-	PersonID uint            `json:"person_id,omitempty"`
-	Crime    Crime           `json:"crime,omitempty"`
-}
-
-// OutcomeCategory holds category information relating to the outcome of a crime.
-type OutcomeCategory struct {
-	Code string `json:"code,omitempty"`
-	Name string `json:"name,omitempty"`
+	Category struct {
+		Code string `json:"code,omitempty"`
+		Name string `json:"name,omitempty"`
+	} `json:"category,omitempty"`
+	Date     string `json:"date,omitempty"`
+	PersonID uint   `json:"person_id,omitempty"`
+	Crime    Crime  `json:"crime,omitempty"`
 }
 
 // CrimeCategory holds of valid categories.

@@ -2,6 +2,7 @@ package ukpolice
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"reflect"
@@ -37,32 +38,7 @@ var rawSearch = `
 	]
 `
 
-var expectedSearch = []Search{
-	{
-		AgeRange:                       "10-17",
-		SelfDefinedEthnicity:           "White - White British (W1)",
-		OutcomeLinkedToObject:          true,
-		DateTime:                       "2017-01-14T20:50:00+00:00",
-		RemovalOfMoreThanOuterClothing: false,
-		Operation:                      false,
-		OfficerDefinedEthnicity:        "White",
-		ObjectOfSearch:                 "Controlled drugs",
-		InvolvedPerson:                 true,
-		Gender:                         "Female",
-		Legislation:                    "Misuse of Drugs Act 1971 (section 23)",
-		Location: Location{
-			Latitude: "52.634407",
-			Street: Street{
-				ID:   883407,
-				Name: "On or near Shopping Area",
-			},
-			Longitude: "-1.133653",
-		},
-		Outcome:       "Local resolution",
-		Type:          "Person search",
-		OperationName: "",
-	},
-}
+var expectedSearch = []Search{}
 
 // Stop and searches by area
 func TestCrimeService_GetStopAndSearchesByArea(t *testing.T) {
@@ -80,7 +56,11 @@ func TestCrimeService_GetStopAndSearchesByArea(t *testing.T) {
 		t.Errorf("StopAndSearch.GetStopAndSearchesByArea returned error: '%s'", err)
 	}
 
-	want := expectedSearch
+	want := []Search{}
+	err = json.Unmarshal([]byte(rawSearch), &want)
+	if err != nil {
+		t.Errorf("could not unmarshal json: '%s'", err)
+	}
 
 	if !reflect.DeepEqual(searches, want) {
 		t.Errorf("StopAndSearch.GetStopAndSearchesByArea returned %v, want %v", searches, want)
@@ -103,7 +83,11 @@ func TestCrimeService_GetStopAndSearchesByLocation(t *testing.T) {
 		t.Errorf("StopAndSearch.GetStopAndSearchesByLocation returned error: '%s'", err)
 	}
 
-	want := expectedSearch
+	want := []Search{}
+	err = json.Unmarshal([]byte(rawSearch), &want)
+	if err != nil {
+		t.Errorf("could not unmarshal json: '%s'", err)
+	}
 
 	if !reflect.DeepEqual(searches, want) {
 		t.Errorf("StopAndSearch.GetStopAndSearchesByLocation returned %v, want %v", searches, want)
@@ -187,7 +171,11 @@ func TestCrimeService_GetStopAndSearchesByForce(t *testing.T) {
 		t.Errorf("StopAndSearch.GetStopAndSearchesByForce returned error: '%s'", err)
 	}
 
-	want := expectedSearch
+	want := []Search{}
+	err = json.Unmarshal([]byte(rawSearch), &want)
+	if err != nil {
+		t.Errorf("could not unmarshal json: '%s'", err)
+	}
 
 	if !reflect.DeepEqual(searches, want) {
 		t.Errorf("StopAndSearch.GetStopAndSearchesByForce returned %v, want %v", searches, want)
