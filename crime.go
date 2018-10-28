@@ -169,7 +169,6 @@ func (c *CrimeService) GetLastUpdated(ctx context.Context) (*Date, *Response, er
 	}
 
 	return date, resp, nil
-
 }
 
 // GetSpecificOutcomes returns the crime details and outcome details for a specific crime

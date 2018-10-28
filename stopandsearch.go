@@ -8,37 +8,29 @@ type StopAndSearchService service
 
 // Search holds information relating to individual stop and searches.
 type Search struct {
-	AgeRange                       string        `json:"age_range,omitempty"`
-	Type                           string        `json:"type,omitempty"`
-	Gender                         string        `json:"gender,omitempty"`
-	Outcome                        interface{}   `json:"outcome,omitempty"`
-	InvolvedPerson                 bool          `json:"involved_person,omitempty"`
-	SelfDefinedEthnicity           string        `json:"self_defined_ethnicity,omitempty"`
-	OfficerDefinedEthnicity        string        `json:"officer_defined_ethnicity,omitempty"`
-	DateTime                       string        `json:"datetime,omitempty"`
-	RemovalOfMoreThanOuterClothing bool          `json:"removal_of_more_than_outer_clothing,omitempty"`
-	OutcomeObject                  OutcomeObject `json:"outcome_object,omitempty"`
-	Location                       Location      `json:"location,omitempty"`
-	Operation                      bool          `json:"operation,omitempty"`
-	OperationName                  string        `json:"operation_name,omitempty"`
-	OutcomeLinkedToObject          bool          `json:"outcome_linked_to_object_of_search,omitempty"`
-	ObjectOfSearch                 string        `json:"object_of_search,omitempty"`
-	Legislation                    string        `json:"legislation,omitempty"`
-}
-
-// OutcomeObject holds inforation relating the the outcome of a search. This
-// type is rarely utilized.
-type OutcomeObject struct {
-	ID   string `json:"id,omitempty"`
-	Name string `json:"name,omitempty"`
+	AgeRange                       string      `json:"age_range,omitempty"`
+	Type                           string      `json:"type,omitempty"`
+	Gender                         string      `json:"gender,omitempty"`
+	Outcome                        interface{} `json:"outcome,omitempty"`
+	InvolvedPerson                 bool        `json:"involved_person,omitempty"`
+	SelfDefinedEthnicity           string      `json:"self_defined_ethnicity,omitempty"`
+	OfficerDefinedEthnicity        string      `json:"officer_defined_ethnicity,omitempty"`
+	DateTime                       string      `json:"datetime,omitempty"`
+	RemovalOfMoreThanOuterClothing bool        `json:"removal_of_more_than_outer_clothing,omitempty"`
+	OutcomeObject                  struct {
+		ID   string `json:"id,omitempty"`
+		Name string `json:"name,omitempty"`
+	} `json:"outcome_object,omitempty"`
+	Location              Location `json:"location,omitempty"`
+	Operation             bool     `json:"operation,omitempty"`
+	OperationName         string   `json:"operation_name,omitempty"`
+	OutcomeLinkedToObject bool     `json:"outcome_linked_to_object_of_search,omitempty"`
+	ObjectOfSearch        string   `json:"object_of_search,omitempty"`
+	Legislation           string   `json:"legislation,omitempty"`
 }
 
 func (s Search) String() string {
 	return Stringify(s)
-}
-
-func (o OutcomeObject) String() string {
-	return Stringify(o)
 }
 
 // GetStopAndSearchesByArea returns stop and searches at street-level;
