@@ -3,11 +3,12 @@ package ukpolice
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"net/url"
 	"time"
+
+	"golang.org/x/time/rate"
 )
 
 const (
@@ -16,7 +17,14 @@ const (
 	// DefaultUserAgent is the value to use in the User-Agent header if none
 	// has been explicitly configured.
 	DefaultUserAgent = "go-ukpolice"
+	// RequestLimit is set to the rate limit of the data.police.uk api
+	RequestLimit = 15
+	// BurstLimit is set to the single second burst limit of the
+	// data.police.uk api.
+	BurstLimit = 30
 )
+
+var limiter = rate.NewLimiter(RequestLimit, BurstLimit)
 
 // for testing?
 var now = time.Now
@@ -105,26 +113,21 @@ func makeResponse(r *http.Response) *Response {
 	return &Response{Response: r}
 }
 
-// Rate represents rate limit information.
-type Rate struct {
-	Remaining int
-	Reset     time.Time
-}
-
-// Implement Stringer interface
-func (r Rate) String() string {
-	return fmt.Sprintf("error rate limit: %d remaining calls; reset in %.fs",
-		r.Remaining, r.Reset.Sub(now()).Seconds())
-}
-
 // Do carries out a request and stores the result in v.
 func (api *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*Response, error) {
 	req = req.WithContext(ctx)
 	// send request
+
+	err := limiter.Wait(ctx)
+	if err != nil {
+		return nil, err
+	}
+
 	resp, err := api.client.Do(req)
 	if err != nil {
 		return nil, err
 	}
+
 	// deferred closing of response body
 	defer resp.Body.Close()
 
