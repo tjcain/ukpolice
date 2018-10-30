@@ -26,8 +26,8 @@ const (
 
 var limiter = rate.NewLimiter(RequestLimit, BurstLimit)
 
-// for testing?
-var now = time.Now
+// for testing
+var now = time.Now()
 
 type service struct {
 	api *Client
@@ -116,13 +116,13 @@ func makeResponse(r *http.Response) *Response {
 // Do carries out a request and stores the result in v.
 func (api *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*Response, error) {
 	req = req.WithContext(ctx)
-	// send request
 
 	err := limiter.Wait(ctx)
 	if err != nil {
 		return nil, err
 	}
 
+	// send request
 	resp, err := api.client.Do(req)
 	if err != nil {
 		return nil, err

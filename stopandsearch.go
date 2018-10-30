@@ -1,6 +1,8 @@
 package ukpolice
 
-import "context"
+import (
+	"context"
+)
 
 // StopAndSearchService handles communication with the stop and search related
 // method of the data.police.uk API.
