@@ -2,6 +2,7 @@ package ukpolice
 
 import (
 	"context"
+	"time"
 )
 
 // StopAndSearchService handles communication with the stop and search related
@@ -10,29 +11,53 @@ type StopAndSearchService service
 
 // Search holds information relating to individual stop and searches.
 type Search struct {
-	AgeRange                       string      `json:"age_range,omitempty"`
-	Type                           string      `json:"type,omitempty"`
-	Gender                         string      `json:"gender,omitempty"`
-	Outcome                        interface{} `json:"outcome,omitempty"`
-	InvolvedPerson                 bool        `json:"involved_person,omitempty"`
-	SelfDefinedEthnicity           string      `json:"self_defined_ethnicity,omitempty"`
-	OfficerDefinedEthnicity        string      `json:"officer_defined_ethnicity,omitempty"`
-	DateTime                       string      `json:"datetime,omitempty"`
-	RemovalOfMoreThanOuterClothing bool        `json:"removal_of_more_than_outer_clothing,omitempty"`
-	OutcomeObject                  struct {
-		ID   string `json:"id,omitempty"`
-		Name string `json:"name,omitempty"`
-	} `json:"outcome_object,omitempty"`
-	Location              Location `json:"location,omitempty"`
-	Operation             bool     `json:"operation,omitempty"`
-	OperationName         string   `json:"operation_name,omitempty"`
-	OutcomeLinkedToObject bool     `json:"outcome_linked_to_object_of_search,omitempty"`
-	ObjectOfSearch        string   `json:"object_of_search,omitempty"`
-	Legislation           string   `json:"legislation,omitempty"`
+	ID                             int           `json:"id"`
+	AgeRange                       string        `json:"age_range"`
+	Type                           string        `json:"type"`
+	Gender                         string        `json:"gender"`
+	Outcome                        SearchOutcome `json:"outcome"`
+	InvolvedPerson                 bool          `json:"involved_person"`
+	SelfDefinedEthnicity           string        `json:"self_defined_ethnicity"`
+	OfficerDefinedEthnicity        string        `json:"officer_defined_ethnicity"`
+	DateTime                       time.Time     `json:"datetime"`
+	RemovalOfMoreThanOuterClothing bool          `json:"removal_of_more_than_outer_clothing"`
+	Location                       Location      `json:"location"`
+	Operation                      bool          `json:"operation"`
+	OperationName                  string        `json:"operation_name"`
+	OutcomeLinkedToObject          bool          `json:"outcome_linked_to_object_of_search"`
+	ObjectOfSearch                 string        `json:"object_of_search"`
+	Legislation                    string        `json:"legislation"`
+	// Force is not supplied natively by the API - if you want to record which
+	// force a search belongs to update this field after fetching.
+	Force string `json:"force"`
 }
 
 func (s Search) String() string {
 	return Stringify(s)
+}
+
+// SearchOutcome holds details of search outcomes. The 'outcome' result provided
+// by the data.police.uk api returns both string and bool types, this struct
+// and the custom UnmarshalJSON satisfy type security.
+type SearchOutcome struct {
+	Desc           string `json:"outcome_desc"`
+	SearchHappened bool   `json:"searched"`
+}
+
+func (o SearchOutcome) String() string {
+	return Stringify(o)
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface.
+func (o *SearchOutcome) UnmarshalJSON(b []byte) error {
+	s := string(b)
+	if s == "false" {
+		*o = SearchOutcome{SearchHappened: false, Desc: ""}
+	} else {
+		*o = SearchOutcome{SearchHappened: true, Desc: s}
+
+	}
+	return nil
 }
 
 // GetStopAndSearchesByArea returns stop and searches at street-level;

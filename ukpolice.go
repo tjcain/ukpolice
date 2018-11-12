@@ -55,7 +55,11 @@ type Client struct {
 
 // NewClient returns a new data.police.uk API client. If a nil httpClient is
 // provided, http.DefaultClient will be used.
-// There is no authentication required by the API.
+//
+// It is reccomended to pass in a http.Client with a longer timeout than default
+// as some responses from the API (particularly when querying for Metropolitan
+// police data) can take over 60 seconds.
+// e.g http.Client{Timeout: time.Second * 120}
 func NewClient(httpClient *http.Client) *Client {
 	if httpClient == nil {
 		httpClient = http.DefaultClient
