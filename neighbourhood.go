@@ -145,7 +145,7 @@ func (n *NeighbourhoodService) GetNeighbourhoodTeam(ctx context.Context, force, 
 	return team, resp, nil
 }
 
-// GetNeighbourhoodEvents returns a list of events information for a given force and neighourhood.
+// GetNeighbourhoodEvents returns a list of events information for a given force and neighbourhood.
 func (n *NeighbourhoodService) GetNeighbourhoodEvents(ctx context.Context, force, NeighbourhoodID string) ([]NeighbourhoodEvent, *Response, error) {
 	u := fmt.Sprintf("%s/%s/events", force, NeighbourhoodID)
 

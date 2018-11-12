@@ -46,7 +46,7 @@ type Client struct {
 	common service // Reuse a single struct instead of allocating one for each service.
 
 	// Services used for talking to different parts of the data.police.uk API
-	Avaliability  *AvaliabilityService
+	Availability  *AvailabilityService
 	Force         *ForceService
 	Crime         *CrimeService
 	Neighborhood  *NeighbourhoodService
@@ -56,7 +56,7 @@ type Client struct {
 // NewClient returns a new data.police.uk API client. If a nil httpClient is
 // provided, http.DefaultClient will be used.
 //
-// It is reccomended to pass in a http.Client with a longer timeout than default
+// It is recommended to pass in a http.Client with a longer timeout than default
 // as some responses from the API (particularly when querying for Metropolitan
 // police data) can take over 60 seconds.
 // e.g http.Client{Timeout: time.Second * 120}
@@ -76,7 +76,7 @@ func NewClient(httpClient *http.Client) *Client {
 	api.common.api = api
 
 	// endpoints
-	api.Avaliability = (*AvaliabilityService)(&api.common)
+	api.Availability = (*AvailabilityService)(&api.common)
 	api.Force = (*ForceService)(&api.common)
 	api.Crime = (*CrimeService)(&api.common)
 	api.Neighborhood = (*NeighbourhoodService)(&api.common)

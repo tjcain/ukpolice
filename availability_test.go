@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func TestAvaliabilityService_GetAvaliabilityInfo(t *testing.T) {
+func TestAvailabilityService_GetAvailabilityInfo(t *testing.T) {
 	client, mux, _, teardown := setup()
 	defer teardown()
 
@@ -28,18 +28,18 @@ func TestAvaliabilityService_GetAvaliabilityInfo(t *testing.T) {
 		`)
 	})
 
-	avaliabilityInfo, _, err := client.Avaliability.GetAvaliabilityInfo(context.Background())
+	availabilityInfo, _, err := client.Availability.GetAvailabilityInfo(context.Background())
 	if err != nil {
-		t.Errorf("Avaliability.GetAvaliabilityInfo returned error: '%+v'", err)
+		t.Errorf("Availability.GetAvailabilityInfo returned error: '%+v'", err)
 	}
 
-	want := []AvaliabilityInfo{
+	want := []AvailabilityInfo{
 		{"2015-06", []string{"bedfordshire", "cleveland", "durham"}},
 		{"2015-05", []string{"bedfordshire", "city-of-london", "cleveland"}},
 	}
 
-	if !reflect.DeepEqual(avaliabilityInfo, want) {
-		t.Errorf("Avaliability.GetAvaliabilityInfo returned %v, want %v", avaliabilityInfo, want)
+	if !reflect.DeepEqual(availabilityInfo, want) {
+		t.Errorf("Availability.GetAvailabilityInfo returned %v, want %v", availabilityInfo, want)
 	}
 
 }

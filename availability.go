@@ -4,26 +4,26 @@ import (
 	"context"
 )
 
-// AvaliabilityService handles communication with the avaliability related
+// AvailabilityService handles communication with the availability related
 // method of the data.police.uk API
-type AvaliabilityService service
+type AvailabilityService service
 
-// AvaliabilityInfo holds information about data avaliability.
-type AvaliabilityInfo struct {
+// AvailabilityInfo holds information about data availability.
+type AvailabilityInfo struct {
 	// @TODO: Convert Date to a time type
 	Date          string   `json:"date,omitempty"`
 	StopAndSearch []string `json:"stop-and-search,omitempty"`
 }
 
-// // AvaliabilityInfoResponse holds the slice of returned AvaliabilityInfo
-// type AvaliabilityInfoResponse []*AvaliabilityInfo
+// // AvailabilityInfoResponse holds the slice of returned AvailabilityInfo
+// type AvailabilityInfoResponse []*AvailabilityInfo
 
-func (a AvaliabilityInfo) String() string {
+func (a AvailabilityInfo) String() string {
 	return Stringify(a)
 }
 
-// GetAvaliabilityInfo returns information about data avaliability.
-func (a *AvaliabilityService) GetAvaliabilityInfo(ctx context.Context) ([]AvaliabilityInfo, *Response, error) {
+// GetAvailabilityInfo returns information about data availability.
+func (a *AvailabilityService) GetAvailabilityInfo(ctx context.Context) ([]AvailabilityInfo, *Response, error) {
 	u := "crimes-street-dates"
 
 	req, err := a.api.NewRequest("GET", u, nil)
@@ -31,11 +31,11 @@ func (a *AvaliabilityService) GetAvaliabilityInfo(ctx context.Context) ([]Avalia
 		return nil, nil, err
 	}
 
-	var avaliabilityInfo []AvaliabilityInfo
-	resp, err := a.api.Do(ctx, req, &avaliabilityInfo)
+	var availabilityInfo []AvailabilityInfo
+	resp, err := a.api.Do(ctx, req, &availabilityInfo)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	return avaliabilityInfo, resp, nil
+	return availabilityInfo, resp, nil
 }
