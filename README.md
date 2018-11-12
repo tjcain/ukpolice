@@ -1,7 +1,8 @@
 # ukpolice
 
 [![Documentation](https://godoc.org/github.com/tjcain/ukpolice?status.svg)](http://godoc.org/github.com/tjcain/ukpolice) [![Build Status](https://travis-ci.org/tjcain/ukpolice.svg?branch=master)](https://travis-ci.org/tjcain/ukpolice)
-[![Go Report Card](https://goreportcard.com/badge/github.com/tcain/ukpolice)](https://goreportcard.com/report/github.com/tcain/ukpolice)
+[![Coverage Status](https://coveralls.io/repos/github/tjcain/ukpolice/badge.svg?branch=master)](https://coveralls.io/github/tjcain/ukpolice?branch=master)
+[![Go Report Card](https://goreportcard.com/badge/github.com/tjcain/ukpolice)](https://goreportcard.com/report/github.com/tjcain/ukpolice)
 
 ukpolice is a Go client library for accessing the [data.police.uk api](https://data.police.uk/docs/)
 
@@ -21,7 +22,7 @@ customClient := http.Client{Timeout: time.Second * 120}
 	client := ukpolice.NewClient(&customClient))
 
 // list all available data sets.
-avaliable, _, err := client.Avaliability.GetAvaliabilityInfo(context.Background())
+available, _, err := client.Availability.GetAvailabilityInfo(context.Background())
 ```
 
 Some API methods have optional parameters that can be passed. For example:
