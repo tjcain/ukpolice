@@ -1,5 +1,7 @@
 # ukpolice
 
+[![Build Status](https://travis-ci.org/tjcain/ukpolice.svg?branch=master)](https://travis-ci.org/tjcain/ukpolice)
+
 ukpolice is a Go client library for accessing the [data.police.uk api](https://data.police.uk/docs/)
 
 ## Usage
