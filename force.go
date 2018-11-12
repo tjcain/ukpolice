@@ -42,7 +42,7 @@ func (so SeniorOfficer) String() string {
 	return Stringify(so)
 }
 
-// GetForces returns a slice containing all avaliable police forces.
+// GetForces returns a slice containing all available police forces.
 func (f *ForceService) GetForces(ctx context.Context) ([]Force, *Response, error) {
 	u := "forces"
 
