@@ -10,7 +10,7 @@ matrix:
 
 before_script:
   - go get -t -v ./...
-  - go get -v go get golang.org/x/time/rate
+  - go get -v golang.org/x/time/rate
   - go vet ./...
 script:
   # run all our tests with race detector
