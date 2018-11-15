@@ -50,7 +50,6 @@ type NeighbourhoodEvent struct {
 	Address        string            `json:"address,omitempty"`
 	Type           string            `json:"type,omitempty"`
 
-	//@TODO: make time objects.
 	StartDate string `json:"start_date,omitempty"`
 	EndDate   string `json:"end_date,omitempty"`
 }
@@ -64,7 +63,6 @@ type NeighbourhoodPriorities struct {
 	Action string `json:"action,omitempty"`
 	Issue  string `json:"issue,omitempty"`
 
-	//@TODO: make time objects.
 	IssueDate  string `json:"issue-date,omitempty"`
 	ActionDate string `json:"action-date,omitempty"`
 }

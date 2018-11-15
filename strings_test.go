@@ -77,21 +77,6 @@ func TestStringify(t *testing.T) {
 			[]*string{String("a"), String("b")},
 			`["a" "b"]`,
 		},
-
-		// actual GitHub structs
-		// @TODO: Add more tests
-		// {
-		// 	Timestamp{time.Date(2006, 01, 02, 15, 04, 05, 0, time.UTC)},
-		// 	`esi.Timestamp{2006-01-02 15:04:05 +0000 UTC}`,
-		// },
-		// {
-		// 	&Timestamp{time.Date(2006, 01, 02, 15, 04, 05, 0, time.UTC)},
-		// 	`esi.Timestamp{2006-01-02 15:04:05 +0000 UTC}`,
-		// },
-		// {
-		// 	CharacterPublicInfo{AncestryID: Int(123), Name: String("pascal")},
-		// 	`esi.CharacterPublicInfo{AncestryID:123, Name:"pascal"}`,
-		// },
 	}
 
 	for i, tt := range tests {

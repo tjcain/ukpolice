@@ -8,9 +8,9 @@ import (
 // method of the data.police.uk API
 type AvailabilityService service
 
-// AvailabilityInfo holds information about data availability.
+// AvailabilityInfo holds information about data availability. Date is returned
+// as a string not time.Time.
 type AvailabilityInfo struct {
-	// @TODO: Convert Date to a time type
 	Date          string   `json:"date,omitempty"`
 	StopAndSearch []string `json:"stop-and-search,omitempty"`
 }
