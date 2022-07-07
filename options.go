@@ -19,7 +19,7 @@ func WithDate(date string) Option {
 func WithLatLong(latitude, longitude string) Option {
 	return func(v *url.Values) {
 		if v.Get("poly") != "" || v.Get("location_id") != "" {
-			panic("oops")
+			panic("error setting options: cannot set lat or long when url values poly or location_id are in use")
 		}
 		v.Set("lat", string(latitude))
 		v.Set("lng", longitude)
@@ -30,7 +30,7 @@ func WithLatLong(latitude, longitude string) Option {
 func WithPolygon(poly string) Option {
 	return func(v *url.Values) {
 		if v.Get("lat") != "" || v.Get("lng") != "" || v.Get("location_id") != "" {
-			panic("oops")
+			panic("error setting options: cannot set Polygon when lat, long or location_id values are in use")
 		}
 		v.Set("poly", poly)
 	}
@@ -40,7 +40,7 @@ func WithPolygon(poly string) Option {
 func WithLocationID(id string) Option {
 	return func(v *url.Values) {
 		if v.Get("lat") != "" || v.Get("lng") != "" || v.Get("poly") != "" {
-			panic("oops")
+			panic("error setting options: cannot set LocationID when lat, long or poly values are in use")
 		}
 		v.Set("location_id", id)
 	}
